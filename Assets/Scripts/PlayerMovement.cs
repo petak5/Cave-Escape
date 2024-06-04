@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private TrailRenderer tr;
     [SerializeField] private GameObject panel;
+    [SerializeField] private GameObject dashIcon;
 
     private Vector2 movement;
 
@@ -99,6 +100,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 originalMovement = movement;
         movement = Vector2.zero;
         rb.velocity = new Vector2(x, y).normalized * dashingPower;
+        dashIcon.SetActive(false);
         tr.emitting = true;
         yield return new WaitForSeconds(dashingTime);
         tr.emitting = false;
@@ -110,6 +112,7 @@ public class PlayerMovement : MonoBehaviour
         }
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
+        dashIcon.SetActive(true);
     }
 
     private void Die()

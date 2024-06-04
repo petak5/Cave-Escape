@@ -25,5 +25,8 @@ public class GameManager : MonoBehaviour
         diamond = true;
     }
 
-
+    public bool GetDiamond()
+    {
+        return diamond;
+    }
 }

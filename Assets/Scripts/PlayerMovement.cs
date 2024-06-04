@@ -22,9 +22,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashingTime = 0.2f;
     [SerializeField] private float dashingCooldown = 1f;
 
+    private GameObject diamond;
+
     private void Start()
     {
         panel.SetActive(false);
+        diamond = GameObject.FindWithTag("Diamond");
+        diamond.GetComponent<Renderer>().enabled = true;
     }
 
     // Update is called once per frame
@@ -61,6 +65,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         isOverWater = false;
+        if (other.gameObject.CompareTag("Diamond")) other.GetComponent<Renderer>().enabled = false;
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -68,6 +73,10 @@ public class PlayerMovement : MonoBehaviour
         if (isDashing)
         {
             isOverWater = true;
+        }
+        else if (other.gameObject.CompareTag("Diamond"))
+        {
+            
         }
         else
         {
@@ -109,6 +118,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
         animator.SetFloat("Speed", movement.sqrMagnitude);
+        diamond.GetComponent<Renderer>().enabled = true;
         panel.SetActive(true);
     }
     public void RestartGame()

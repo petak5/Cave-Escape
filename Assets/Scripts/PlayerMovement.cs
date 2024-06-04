@@ -69,7 +69,8 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         isOverWater = false;
-        if (other.gameObject.CompareTag("Diamond")) other.GetComponent<Renderer>().enabled = false;
+        if (other.gameObject.CompareTag("Diamond")) CollectDiamond(other);
+        if (other.gameObject.CompareTag("Enemy1") || other.gameObject.CompareTag("Enemy2")) Die();
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -78,13 +79,19 @@ public class PlayerMovement : MonoBehaviour
         {
             isOverWater = true;
         }
-        else if (other.gameObject.CompareTag("Diamond"))
+        else if (other.gameObject.CompareTag("Diamond") || other.gameObject.CompareTag("Enemy1") || other.gameObject.CompareTag("Enemy2"))
         {
         }
         else
         {
             Die();
         }
+    }
+
+    private void CollectDiamond(Collider2D other)
+    {
+        other.GetComponent<Renderer>().enabled = false;
+
     }
 
     private IEnumerator Dash()

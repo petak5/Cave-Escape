@@ -340,11 +340,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474eccb355e6549088af6f21e12d7685, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 3
   rb: {fileID: 1080506797}
   animator: {fileID: 1080506800}
   tr: {fileID: 1080506801}
-  dashingPower: 15
+  dashingPower: 10
   dashingTime: 0.2
   dashingCooldown: 1
 --- !u!50 &1080506797

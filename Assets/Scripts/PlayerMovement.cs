@@ -28,7 +28,10 @@ public class PlayerMovement : MonoBehaviour
     {
         panel.SetActive(false);
         diamond = GameObject.FindWithTag("Diamond");
-        diamond.GetComponent<Renderer>().enabled = true;
+        if (diamond != null)
+        {
+            diamond.GetComponent<Renderer>().enabled = true;
+        }
     }
 
     // Update is called once per frame
@@ -76,7 +79,6 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("Diamond"))
         {
-            
         }
         else
         {
@@ -118,7 +120,11 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
         animator.SetFloat("Speed", movement.sqrMagnitude);
-        diamond.GetComponent<Renderer>().enabled = true;
+        if (diamond != null)
+        {
+            diamond.GetComponent<Renderer>().enabled = true;
+        }
+
         panel.SetActive(true);
     }
     public void RestartGame()

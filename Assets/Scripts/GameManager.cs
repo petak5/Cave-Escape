@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
 
+    private bool diamond = false;
+
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -17,4 +19,11 @@ public class GameManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
     }
+
+    public void GotDiamond()
+    {
+        diamond = true;
+    }
+
+
 }

@@ -91,7 +91,7 @@ public class PlayerMovement : MonoBehaviour
     private void CollectDiamond(Collider2D other)
     {
         other.GetComponent<Renderer>().enabled = false;
-
+        GameManager.instance.GotDiamond();
     }
 
     private IEnumerator Dash()

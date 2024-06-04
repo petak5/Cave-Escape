@@ -9,19 +9,27 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Animator animator;
     [SerializeField] private TrailRenderer tr;
+    [SerializeField] private GameObject panel;
 
     private Vector2 movement;
 
+    private bool isDead = false;
+    private bool isOverWater = false;
     private bool canDash = true;
     private bool isDashing = false;
     [SerializeField] private float dashingPower = 10f;
     [SerializeField] private float dashingTime = 0.2f;
     [SerializeField] private float dashingCooldown = 1f;
 
+    private void Start()
+    {
+        panel.SetActive(false);
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (isDashing)
+        if (isDashing || isDead)
         {
             return;
         }
@@ -49,6 +57,23 @@ public class PlayerMovement : MonoBehaviour
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        isOverWater = false;
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (isDashing)
+        {
+            isOverWater = true;
+        }
+        else
+        {
+            Die();
+        }
+    }
+
     private IEnumerator Dash()
     {
         canDash = false;
@@ -67,7 +92,33 @@ public class PlayerMovement : MonoBehaviour
         tr.emitting = false;
         movement = originalMovement;
         isDashing = false;
+        if (isOverWater)
+        {
+            Die();
+        }
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
+    }
+
+    private void Die()
+    {
+        isOverWater = false;
+        isDead = true;
+        movement = Vector2.zero;
+        animator.SetFloat("Horizontal", movement.x);
+        animator.SetFloat("Vertical", movement.y);
+        animator.SetFloat("Speed", movement.sqrMagnitude);
+        panel.SetActive(true);
+    }
+    public void RestartGame()
+    {
+        isDead = false;
+        transform.position = new Vector3(0, -3, -1);
+        panel.SetActive(false);
+    }
+
+    public void GoToAfterlife()
+    {
+
     }
 }

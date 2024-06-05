@@ -71,6 +71,7 @@ public class PlayerMovement : MonoBehaviour
         isOverWater = false;
         if (other.gameObject.CompareTag("Diamond")) CollectDiamond(other);
         if (other.gameObject.CompareTag("Enemy1") || other.gameObject.CompareTag("Enemy2")) Die();
+        if (other.gameObject.CompareTag("Exit1")) GoToSecondScene();
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -137,15 +138,30 @@ public class PlayerMovement : MonoBehaviour
 
         panel.SetActive(true);
     }
-    public void RestartGame()
+
+    public void RestartLevel()
     {
         isDead = false;
         transform.position = new Vector3(0, -3, -1);
         panel.SetActive(false);
     }
 
+    public void RestartGame()
+    {
+        RestartLevel();
+        if (SceneManager.GetActiveScene().name != "FirstScene")
+        {
+            SceneManager.LoadScene("Scenes/FirstScene");
+        }
+    }
+
     public void GoToAfterlife()
     {
         SceneManager.LoadScene("Scenes/Afterlife");
+    }
+
+    public void GoToSecondScene()
+    {
+        SceneManager.LoadScene("Scenes/SecondScene");
     }
 }

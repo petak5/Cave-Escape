@@ -24,6 +24,4 @@ public class GameManager : MonoBehaviour
     {
         diamond = true;
     }
-
-
 }

@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject panel;
     [SerializeField] private GameObject dashIcon;
 
+    private Vector3 startingPosition;
     private Vector2 movement;
 
     private bool isDead = false;
@@ -27,11 +28,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        startingPosition = transform.position;
         panel.SetActive(false);
         diamond = GameObject.FindWithTag("Diamond");
         if (diamond != null)
         {
             diamond.GetComponent<Renderer>().enabled = true;
+        }
+        if (SceneManager.GetActiveScene().name == "SecondScene")
+        {
+            if (!GameManager.instance.hasDiamond)
+            {
+                GameObject enemy2 = GameObject.FindWithTag("Enemy2");
+                enemy2.SetActive(false);
+            }
         }
     }
 
@@ -71,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
         isOverWater = false;
         if (other.gameObject.CompareTag("Diamond")) CollectDiamond(other);
         if (other.gameObject.CompareTag("Enemy1") || other.gameObject.CompareTag("Enemy2")) Die();
+        if (other.gameObject.CompareTag("Exit1")) GoToSecondScene();
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -130,22 +141,37 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
         animator.SetFloat("Speed", movement.sqrMagnitude);
+        panel.SetActive(true);
+    }
+
+    public void RestartLevel()
+    {
+        isDead = false;
+        transform.position = startingPosition;
         if (diamond != null)
         {
             diamond.GetComponent<Renderer>().enabled = true;
         }
-
-        panel.SetActive(true);
+        panel.SetActive(false);
     }
+
     public void RestartGame()
     {
-        isDead = false;
-        transform.position = new Vector3(0, -3, -1);
-        panel.SetActive(false);
+        RestartLevel();
+        GameManager.instance.RestartDiamond();
+        if (SceneManager.GetActiveScene().name != "FirstScene")
+        {
+            SceneManager.LoadScene("Scenes/FirstScene");
+        }
     }
 
     public void GoToAfterlife()
     {
         SceneManager.LoadScene("Scenes/Afterlife");
+    }
+
+    public void GoToSecondScene()
+    {
+        SceneManager.LoadScene("Scenes/SecondScene");
     }
 }

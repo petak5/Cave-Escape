@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
 
-    private bool diamond = false;
+    public bool hasDiamond { get; private set; } = false;
 
     private void Awake()
     {
@@ -22,11 +22,16 @@ public class GameManager : MonoBehaviour
 
     public void GotDiamond()
     {
-        diamond = true;
+        hasDiamond = true;
     }
 
     public bool GetDiamond()
     {
         return diamond;
+    }
+    
+    public void RestartDiamond()
+    {
+        hasDiamond = false;
     }
 }

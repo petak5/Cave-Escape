@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Afterlife.unity
     guid: d47e1e6f3befc43e7a46471c3a2957e2
+  - enabled: 1
+    path: Assets/Scenes/SecondScene.unity
+    guid: 51398522dbbed432ea8082b46b33d373
   m_configObjects: {}

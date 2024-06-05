@@ -25,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashingCooldown = 1f;
 
     private GameObject diamond;
+    private GameObject enemy1;
+    private GameObject enemy2;
 
     private void Start()
     {
@@ -35,12 +37,13 @@ public class PlayerMovement : MonoBehaviour
         {
             diamond.GetComponent<Renderer>().enabled = true;
         }
+        enemy1 = GameObject.FindWithTag("Enemy1");
+        enemy2 = GameObject.FindWithTag("Enemy2");
         if (SceneManager.GetActiveScene().name == "SecondScene")
         {
             if (!GameManager.instance.hasDiamond)
             {
-                GameObject enemy2 = GameObject.FindWithTag("Enemy2");
-                enemy2.SetActive(false);
+                if (enemy2 != null) { enemy2.SetActive(false); }
             }
         }
     }
@@ -60,7 +63,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Vertical", movement.y);
         animator.SetFloat("Speed", movement.sqrMagnitude);
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)) && canDash)
         {
             StartCoroutine(Dash());
         }
@@ -80,7 +83,20 @@ public class PlayerMovement : MonoBehaviour
     {
         isOverWater = false;
         if (other.gameObject.CompareTag("Diamond")) CollectDiamond(other);
-        if (other.gameObject.CompareTag("Enemy1") || other.gameObject.CompareTag("Enemy2")) Die();
+        if (other.gameObject.CompareTag("Enemy1") || other.gameObject.CompareTag("Enemy2"))
+        {
+            if (GameManager.instance.hasPowerUp)
+            {
+                GameObject enemy = GameObject.FindWithTag(other.gameObject.tag);
+                if (enemy != null) { enemy.SetActive(false); }
+                // Do not touch, I have no idea why but it needs to be here again, otherwise the player keeps dying when dashing into slime
+                isOverWater = false;
+            }
+            else
+            {
+                Die();
+            }
+        }
         if (other.gameObject.CompareTag("Exit1")) GoToSecondScene();
     }
 
@@ -148,9 +164,26 @@ public class PlayerMovement : MonoBehaviour
     {
         isDead = false;
         transform.position = startingPosition;
+        if (SceneManager.GetActiveScene().name == "FirstScene")
+        {
+            GameManager.instance.RestartDiamond();
+        }
         if (diamond != null)
         {
             diamond.GetComponent<Renderer>().enabled = true;
+        }
+        if (SceneManager.GetActiveScene().name == "SecondScene")
+        {
+            if (enemy1 != null) { enemy1.SetActive(true); }
+
+            if (!GameManager.instance.hasDiamond)
+            {
+                if (enemy2 != null) { enemy2.SetActive(false); }
+            }
+            else
+            {
+                if (enemy2 != null) { enemy2.SetActive(true); }
+            }
         }
         panel.SetActive(false);
     }
@@ -167,6 +200,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void GoToAfterlife()
     {
+        GameManager.instance.previousScene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene("Scenes/Afterlife");
     }
 

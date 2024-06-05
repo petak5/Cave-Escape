@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
     public static GameManager instance { get; private set; }
 
     public bool hasDiamond { get; private set; } = false;
+    public bool hasPowerUp { get; private set; } = false;
+    public string previousScene;
 
     private void Awake()
     {
@@ -33,5 +35,15 @@ public class GameManager : MonoBehaviour
     public void RestartDiamond()
     {
         hasDiamond = false;
+    }
+
+    public void EnablePowerUp()
+    {
+        hasPowerUp = true;
+    }
+
+    public void DisablePowerUp()
+    {
+        hasPowerUp = false;
     }
 }
